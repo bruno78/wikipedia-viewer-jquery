@@ -11,6 +11,17 @@ let titleToLink = (title)=> {
   return link
 }
 
+let searchToggle = (obj, e)=> {
+  let container = $(obj).closest(".search-wrapper");
+  if(!container.hasClass('active')) {
+    container.addClass('active');
+    e.preventDefault();
+  }
+  else if (container.hasClass('active') && $(obj).closest('.input-holder').length == 0) {
+    container.removeClass('active');
+    container.find('.search-input').val('');
+  }
+}
 
 $(document).ready(()=> {
 
