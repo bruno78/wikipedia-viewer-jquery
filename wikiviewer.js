@@ -1,8 +1,20 @@
-$(document).ready(function() {
+let titleToLink = (title)=> {
+  let link = ''
+  for(var i = 0; i < title.length; i++) {
+    if(title[i] === " ") {
+      link += "_"
+    }
+    else {
+      link += title[i]
+    }
+  }
+  return link
+}
 
-//https://en.wikipedia.org/w/api.php?action=query&titles=Main%20Page&prop=revisions&rvprop=content&format=json
 
-  $("input").keypress(function(e) {
+$(document).ready(()=> {
+
+  $("input").keypress((e)=> {
     let code = e.keyCode || e.which;
     if (code == 13) {
        let searchTerm = $("input").val()
@@ -10,39 +22,22 @@ $(document).ready(function() {
          alert("Value cannot be empty")
        }
        else {
-         //https://en.wikipedia.org/w/api.php?action=query&titles=Main%20Page&prop=revisions&rvprop=content&format=json
          let wikiURL = "https://en.wikipedia.org/w/api.php?"
          let data = "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=" + searchTerm + "&format=json&callback=?"
 
-
-         $.getJSON(data, function(data) {
+         $.getJSON(data, (data)=> {
            let results = data.query.search
-           console.log(results)
            let = items = []
-           for(var i = 0; i < results.length; i++) {
-             items.push("<li><h2>" + results[i].title + "</h2>" +
-                             "<p>" + results[i].snippet +"</p></li>")
+           for(let i = 0; i < results.length; i++) {
+             let link = "https://en.wikipedia.org/wiki/" + titleToLink(results[i].title)
+             items.push("<li><a href=" + '"' + link + '"' + " target=\"_blank\"><h2>" + results[i].title + "</h2>" +
+                             "<p>" + results[i].snippet +"</p></a></li>")
            }
-           //$("#title").html(JSON.parse(JSON.stringify(results[i].title)))
-           //$("#").html(JSON.parse(JSON.stringify(results[i].snippet)))
            $("<ul/>", {
              "class":"display-list",
              html: items.join("")
            }).appendTo(".display")
          })
-         /*
-         $.ajax({
-            url: data,
-            data: queryData,
-            dataType: 'json',
-            type: 'GET',
-            headers: { 'Api-User-Agent': 'Example/1.0' },
-            success: function(data) {
-               // do something with data
-               $("display").html(data)
-            }
-         }) */
-
        }
     }
   })
