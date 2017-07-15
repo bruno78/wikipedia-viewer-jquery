@@ -1,3 +1,6 @@
+let items = []
+let results = ''
+
 let titleToLink = (title)=> {
   let link = ''
   for(var i = 0; i < title.length; i++) {
@@ -11,44 +14,52 @@ let titleToLink = (title)=> {
   return link
 }
 
-let searchToggle = (obj, e)=> {
-  let container = $(obj).closest(".search-wrapper");
-  if(!container.hasClass('active')) {
-    container.addClass('active');
-    e.preventDefault();
-  }
-  else if (container.hasClass('active') && $(obj).closest('.input-holder').length == 0) {
-    container.removeClass('active');
-    container.find('.search-input').val('');
-  }
+let search = ()=> {
+  let value = $('#search').val()
+  $.ajax({
+    url: 'https://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srsearch=' + value,
+    dataType: 'jsonp',
+    type: 'GET',
+    headers: {
+      'Api-User-Agent': 'Example/1.0'
+    },
+    success: (data)=> {
+
+      // Clearing the children from previous searches
+      $('.display-results').empty()
+      // Clearing the array containing the results
+      let results = data.query.search
+      items.length = 0
+      for(let i = 0; i < results.length; i++) {
+        let link = "https://en.wikipedia.org/wiki/" + titleToLink(results[i].title)
+        items.push("<li class=\"collection-item\"><a href=" + '"' + link + '"' + " target=\"_blank\"><h4>" + results[i].title + "</h4>" +
+                        "<p>" + results[i].snippet +"</p></a></li>")
+      }
+
+      result = $("<ul/>", {
+        "class":"collection",
+        html: items.join("")
+      })
+
+      $('#wikipedia-viewer').animate({top: '10%'}, ()=>{
+        $(result).hide().appendTo(".display-results").fadeIn(1000)
+      })
+    } // .success
+  })
 }
 
 $(document).ready(()=> {
 
   $("input").keypress((e)=> {
-    let code = e.keyCode || e.which;
+    let code = e.keyCode || e.which
     if (code == 13) {
-       let searchTerm = $("input").val()
+       let searchTerm = $("#search").val()
        if(searchTerm === "") {
          alert("Value cannot be empty")
+         $("#wikipedia-viewer").append("<p>Value cannot be empty</p>")
        }
        else {
-         let wikiURL = "https://en.wikipedia.org/w/api.php?"
-         let data = "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=" + searchTerm + "&format=json&callback=?"
-
-         $.getJSON(data, (data)=> {
-           let results = data.query.search
-           let = items = []
-           for(let i = 0; i < results.length; i++) {
-             let link = "https://en.wikipedia.org/wiki/" + titleToLink(results[i].title)
-             items.push("<li><a href=" + '"' + link + '"' + " target=\"_blank\"><h2>" + results[i].title + "</h2>" +
-                             "<p>" + results[i].snippet +"</p></a></li>")
-           }
-           $("<ul/>", {
-             "class":"display-list",
-             html: items.join("")
-           }).appendTo(".display")
-         })
+         search()
        }
     }
   })
