@@ -55,8 +55,8 @@ $(document).ready(()=> {
     if (code == 13) {
        let searchTerm = $("#search").val()
        if(searchTerm === "") {
-         alert("Value cannot be empty")
-         $("#wikipedia-viewer").append("<p>Value cannot be empty</p>")
+         var $toastContent = $('<p>Heya, put some text! :D</p>')
+         Materialize.toast($toastContent, 2000, 'alert align-center')
        }
        else {
          search()
