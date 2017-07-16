@@ -55,7 +55,7 @@ $(document).ready(()=> {
     if (code == 13) {
        let searchTerm = $("#search").val()
        if(searchTerm === "") {
-         var $toastContent = $('<p>Heya, put some text! :D</p>')
+         let $toastContent = $('<p>Heya, put some text! :D</p>')
          Materialize.toast($toastContent, 2000, 'alert')
        }
        else {
