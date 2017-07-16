@@ -56,7 +56,7 @@ $(document).ready(()=> {
        let searchTerm = $("#search").val()
        if(searchTerm === "") {
          var $toastContent = $('<p>Heya, put some text! :D</p>')
-         Materialize.toast($toastContent, 2000, 'alert align-center')
+         Materialize.toast($toastContent, 2000, 'alert')
        }
        else {
          search()
